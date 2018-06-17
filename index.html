@@ -1,0 +1,84 @@
+<html>
+
+	<head>
+
+		<!--JQUERY CDN -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<!-- Bootstrap CDN -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+	</head>
+
+
+<body>
+
+	<div class="container jumbotron">
+
+
+  <div class="form-group">
+    <label for="code">Code</label>
+    <input type="text" id='codefield' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Code">
+    <small id="emailHelp" class="form-text text-muted">Please Enter the desired code</small>
+  </div>
+  <button type="submit" onclick="loadDoc()" class="btn btn-primary">Submit</button>
+
+
+
+	</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Code</th>
+      <th scope="col">Name</th>
+      <th scope="col">industry</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row" id='id'></th>
+      <td id='code'></td>
+      <td id='name'></td>
+      <td id='industry'></td>
+    </tr>
+  </tbody>
+</table>
+
+	<script>
+
+
+function loadDoc() {
+	var codefield = document.getElementById('codefield').value;
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+	  var response = JSON.parse(this.responseText);
+	    for(var i=0;i<response.length;i++){
+	    if (codefield == response[i].Code){
+		 document.getElementById("id").innerHTML =  response[i].id;
+		 document.getElementById("code").innerHTML =  response[i].Code;
+		 document.getElementById("name").innerHTML =  response[i].Name;
+  		 document.getElementById("industry").innerHTML =  response[i].Industry;
+
+	    }
+	    else{
+	    console.log("Error Occured!");
+	    }
+	    }
+};
+  };
+  xhttp.open("GET", "http://127.0.0.1:8000/details/", true);
+  xhttp.send();
+}
+
+
+
+	</script>
+
+</body>
+
+
+
+</html>
