@@ -8,6 +8,10 @@
 		<!-- Bootstrap CDN -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+	<!-- Select 2 CDN -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
 	</head>
 
 
@@ -26,9 +30,15 @@
 
 
 	</div>
-
+	<div class='container jumbotron'>
+	<select id='codefield1' class="js-example-basic-multiple form-control" name="states[]" multiple="multiple">
+  <option value="WBC">WBC</option>
+  <option value="TBH">TBH</option>
+</select>
+<button type='submit' class='btn btn-primary' onclick='loadDoc()'>Submit</button>
+	</div>
 <table class="table">
-  <thead>
+   <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">Code</th>
@@ -36,46 +46,100 @@
       <th scope="col">industry</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
+  <tbody id='tableContent'>
+	 
+   <!--  <tr>
       <th scope="row" id='id'></th>
       <td id='code'></td>
       <td id='name'></td>
       <td id='industry'></td>
-    </tr>
-  </tbody>
+   </tr> -->
+  </tbody
 </table>
 
 	<script>
 
 
 function loadDoc() {
-	var codefield = document.getElementById('codefield').value;
+	var j=0;
+	var data= [];	
+//	console.log('array empty')
+	var  count = $('#codefield1').find(':selected').length;
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
 	  var response = JSON.parse(this.responseText);
+	       for(j=0;j<count;j++){
+         var codefield =  $('#codefield1').find(':selected')[j].innerText;
+
 	    for(var i=0;i<response.length;i++){
-	    if (codefield == response[i].Code){
-		 document.getElementById("id").innerHTML =  response[i].id;
-		 document.getElementById("code").innerHTML =  response[i].Code;
-		 document.getElementById("name").innerHTML =  response[i].Name;
-  		 document.getElementById("industry").innerHTML =  response[i].Industry;
+//	   console.log('code is'+response[i].Code);
+	    if (response[i].Code == codefield ){
+		    
+		    data.push( "<tr>"+"<th scope='row'>"+response[i].id+"</th>"+"<td>"+response[i].Code+"</td>"+"<td>"+response[i].Name+"</td>"+"<td>"+response[i].Industry+"</td>"+"</tr>"+"<br>");
+
 
 	    }
 	    else{
-	    console.log("Error Occured!");
+//	    console.log("Error Occured!");
 	    }
-	    }
+	    }}
+   }
+
+	// for(arraycount=0;arraycount<data.length;arraycount++){
+//	var writecontent=document.getElementById('demo').appendChild(document.createTextNode(data[arraycount]));
+//		 document.getElementById('demo').innerHtml = writecontent;
+//		 console.log(data[arraycount]);
+//	 }
+//console.log(data.length);
+	  if( data.length){
+       callback(data);   
+	  console.log('before clearing'+data.length);
+	  data = [];
+	  console.log('after clearing'+data.length);
+	  }
 };
-  };
   xhttp.open("GET", "http://127.0.0.1:8000/details/", true);
   xhttp.send();
+
 }
 
 
 
 	</script>
+
+
+	<script>
+		var str='';
+		function callback(data){
+			console.log(data);
+			for(var i=0;i<data.length;i++){
+				str = data[i];
+			
+		var $log = $( "#tableContent" ),
+ html = $.parseHTML( str ),
+ nodeNames = [];
+
+// Append the parsed HTML
+$log.append( html );
+			}}
+	</script>
+
+	    <script>
+$(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+	$("select").select2();
+
+$("select").on("select2:select", function (evt) {
+  var element = evt.params.data.element;
+  var $element = $(element);
+
+  $element.detach();
+  $(this).append($element);
+  $(this).trigger("change");
+});
+});
+	    </script>
 
 </body>
 
